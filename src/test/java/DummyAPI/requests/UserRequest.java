@@ -22,11 +22,26 @@ public class UserRequest {
                 .get("/user");
     }
 
-    public static Response getUserById(String userId) {
+    public static Response getUserById(String id) {
         return RestAssured.given()
                 .spec(ApiConfig.getRequestSpec())
-                .pathParam("id", userId)
                 .when()
-                .get("/user/{id}");
+                .get("/user/" + id);
     }
+
+    public static Response createUser(Object body) {
+        return RestAssured.given()
+                .spec(ApiConfig.getRequestSpec())
+                .body(body)
+                .when()
+                .post("/user/create");
+    }
+
+    public static Response deleteUser(String id) {
+        return RestAssured.given()
+                .spec(ApiConfig.getRequestSpec())
+                .when()
+                .delete("/user/" + id);
+    }
+
 }
