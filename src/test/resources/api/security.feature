@@ -2,7 +2,7 @@
 Feature: Global Authentication Security API
 
   Scenario Outline: Fail to access endpoint without app-id header
-    When I send request to "<endpoint>" without app-id
+    When a request is sent to "<endpoint>" without app-id
     Then the response status code should be 403
     And the response error should be "APP_ID_MISSING"
 
@@ -12,7 +12,7 @@ Feature: Global Authentication Security API
       | /user    |
 
   Scenario Outline: Fail to access endpoint with invalid app-id
-    When I send request to "<endpoint>" with invalid app-id "invalid_token_123"
+    When a request is sent to "<endpoint>" with invalid app-id "invalid_token_123"
     Then the response status code should be 403
     And the response error should be "APP_ID_NOT_EXIST"
 

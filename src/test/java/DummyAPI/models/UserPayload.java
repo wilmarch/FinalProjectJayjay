@@ -20,4 +20,28 @@ public class UserPayload {
         if (!fieldToOmit.equalsIgnoreCase("email")) body.put("email", email);
         return body;
     }
+
+    public static Map<String, Object> createUpdatePayload(Map<String, String> fields) {
+        return new HashMap<>(fields);
+    }
+
+    public static Map<String, Object> createSingleFieldUpdatePayload(String fieldName, String value) {
+        Map<String, Object> body = new HashMap<>();
+        body.put(fieldName, value);
+        return body;
+    }
+
+    public static Map<String, Object> createLocationUpdatePayload(String street, String city, String state,
+                                                                  String country, String timezone) {
+        Map<String, Object> location = new HashMap<>();
+        location.put("street", street);
+        location.put("city", city);
+        location.put("state", state);
+        location.put("country", country);
+        location.put("timezone", timezone);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("location", location);
+        return body;
+    }
 }

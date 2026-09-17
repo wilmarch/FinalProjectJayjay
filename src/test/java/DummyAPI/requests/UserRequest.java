@@ -37,6 +37,14 @@ public class UserRequest {
                 .post("/user/create");
     }
 
+    public static Response updateUser(String id, Object body) {
+        return RestAssured.given()
+                .spec(ApiConfig.getRequestSpec())
+                .body(body)
+                .when()
+                .put("/user/" + id);
+    }
+
     public static Response deleteUser(String id) {
         return RestAssured.given()
                 .spec(ApiConfig.getRequestSpec())
