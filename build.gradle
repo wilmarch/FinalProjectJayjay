@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = 'Wilmar'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.cucumber:cucumber-java:7.34.8'
+    testImplementation 'io.cucumber:cucumber-junit:7.34.8'
+    testImplementation 'io.cucumber:cucumber-picocontainer:7.34.8'
+
+    testImplementation 'io.rest-assured:rest-assured:6.0.1'
+    implementation 'org.json:json:20260522'
+
+    testImplementation platform('org.junit:junit-bom:6.0.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
