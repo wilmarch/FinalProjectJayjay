@@ -10,22 +10,55 @@ repositories {
 }
 
 dependencies {
+// Cucumber Core & DI
     implementation 'io.cucumber:cucumber-java:7.34.8'
     testImplementation 'io.cucumber:cucumber-junit:7.34.8'
     testImplementation 'io.cucumber:cucumber-picocontainer:7.34.8'
 
+    // API Testing
     testImplementation 'io.rest-assured:rest-assured:6.0.1'
     implementation 'org.json:json:20260522'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.2'
 
+    // Web UI Testing (Selenium & Driver Manager)
+    implementation 'org.seleniumhq.selenium:selenium-java:4.48.0'
+    implementation 'io.github.bonigarcia:webdrivermanager:6.3.3'
+
+    // Testing Framework
     testImplementation platform('org.junit:junit-bom:6.0.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.2'
 }
 
 test {
     testLogging {
         events "passed", "skipped", "failed"
+    }
+
+    tasks.register('apiTest', Test) {
+        description = 'Execute all Cucumber tests with tag @api'
+        group = 'verification'
+
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+
+        systemProperty 'cucumber.filter.tags', '@api'
+        systemProperty 'cucumber.plugin', 'pretty, html:build/reports/cucumber/api/report.html, json:build/reports/cucumber/api/report.json'
+    }
+
+    tasks.register('webTest', Test) {
+        description = 'Execute all Cucumber tests with tag @web'
+        group = 'verification'
+
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+
+        systemProperty 'cucumber.filter.tags', '@web'
+        systemProperty 'cucumber.plugin', 'pretty, html:build/reports/cucumber/web/report.html, json:build/reports/cucumber/web/report.json'
     }
 }
