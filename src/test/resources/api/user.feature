@@ -30,7 +30,7 @@ Feature: User API DummyAPI
     Then the response status code should be 400
     And the response error should be "PARAMS_NOT_VALID"
 
-  @user-get-after-create
+  @user-get-after-create @cleanup_user
   Scenario: Successfully get user details of the newly created user
     Given a request is sent to create a user with firstName "Created", lastName "Directly", and email "newly.created.user@mail.com"
     And the response status code should be 200
@@ -42,14 +42,14 @@ Feature: User API DummyAPI
     And the response body path "lastName" should be "Directly"
     And the response body path "email" should be "newly.created.user@mail.com"
 
-  @user-create-success
+  @user-create-success @cleanup_user
   Scenario: Successfully create user with valid mandatory fields
     When a request is sent to create a user with firstName "QA", lastName "Engineer", and email "qa.valid.tester@mail.com"
     Then the response status code should be 200
     And the created user should have valid id
     And the response body path "email" should be "qa.valid.tester@mail.com"
 
-  @user-create-duplicate-email
+  @user-create-duplicate-email @cleanup_user
   Scenario: Fail to create user with existing email
     Given a request is sent to create a user with unique email for duplicate check
     And the response status code should be 200
@@ -83,7 +83,7 @@ Feature: User API DummyAPI
       | username@domain..com      |
       | username space@domain.com |
 
-  @user-update-single-field
+  @user-update-single-field @cleanup_user
   Scenario: Successfully update a single field
     Given a request is sent to create a user with firstName "Original", lastName "Name", and email "update.single.field@mail.com"
     And the response status code should be 200
@@ -94,7 +94,7 @@ Feature: User API DummyAPI
     And the response body path "firstName" should be "Updated"
     And the response body path "lastName" should be "Name"
 
-  @user-update-multiple-fields
+  @user-update-multiple-fields @cleanup_user
   Scenario: Successfully update multiple fields at once
     Given a request is sent to create a user with firstName "Multi", lastName "Field", and email "update.multi.field@mail.com"
     And the response status code should be 200
@@ -108,7 +108,7 @@ Feature: User API DummyAPI
     And the response body path "lastName" should be "UpdatedLast"
     And the response body path "phone" should be "+628111222333"
 
-  @user-update-location
+  @user-update-location @cleanup_user
   Scenario: Successfully update nested location object
     Given a request is sent to create a user with firstName "Location", lastName "Test", and email "update.location.field@mail.com"
     And the response status code should be 200
@@ -119,7 +119,7 @@ Feature: User API DummyAPI
     And the response body path "location.city" should be "Jakarta"
     And the response body path "location.timezone" should be "+7:00"
 
-  @user-update-forbidden-email
+  @user-update-forbidden-email @cleanup_user
   Scenario: Attempt to update the forbidden email field is ignored
     Given a request is sent to create a user with firstName "Locked", lastName "Email", and email "locked.email.original@mail.com"
     And the response status code should be 200
@@ -141,7 +141,7 @@ Feature: User API DummyAPI
     Then the response status code should be 400
     And the response error should be "PARAMS_NOT_VALID"
 
-  @user-update-boundary-firstname
+  @user-update-boundary-firstname @cleanup_user
   Scenario: Update accepts firstName below documented minimum length
     Given a request is sent to create a user with firstName "Boundary", lastName "Test", and email "update.boundary.negative@mail.com"
     And the response status code should be 200
@@ -151,7 +151,7 @@ Feature: User API DummyAPI
     Then the response status code should be 200
     And the response body path "firstName" should be "A"
 
-  @user-delete-success
+  @user-delete-success @cleanup_user
   Scenario: Successfully delete an existing user and verify it is gone
     Given a request is sent to create a user with firstName "ToDelete", lastName "User", and email "to.delete.verify@mail.com"
     And the response status code should be 200
@@ -175,7 +175,7 @@ Feature: User API DummyAPI
     Then the response status code should be 400
     And the response error should be "PARAMS_NOT_VALID"
 
-  @user-delete-twice
+  @user-delete-twice @cleanup_user
   Scenario: Fail to delete the same user twice
     Given a request is sent to create a user with firstName "DoubleDelete", lastName "User", and email "double.delete.check@mail.com"
     And the response status code should be 200
