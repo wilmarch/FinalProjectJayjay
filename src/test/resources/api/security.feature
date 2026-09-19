@@ -20,3 +20,9 @@ Feature: Global Authentication Security API
       | endpoint |
       | /tag     |
       | /user    |
+
+
+  Scenario: Fail to create user without app-id header
+    When a request is sent to create a user without app-id
+    Then the response status code should be 403
+    And the response error should be "APP_ID_MISSING"
