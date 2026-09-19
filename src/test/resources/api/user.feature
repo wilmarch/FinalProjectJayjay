@@ -32,7 +32,7 @@ Feature: User API DummyAPI
 
   @user-get-after-create @cleanup_user
   Scenario: Successfully get user details of the newly created user
-    Given a request is sent to create a user with firstName "Created", lastName "Directly", and email "newly.created.user@mail.com"
+    Given a request is sent to create a user with firstName "Created", lastName "Directly", and email "newly.created.user.v2@mail.com"
     And the response status code should be 200
     And the created user should have valid id
     When user details are requested by that ID
@@ -40,14 +40,14 @@ Feature: User API DummyAPI
     And the retrieved user details should match the ID
     And the response body path "firstName" should be "Created"
     And the response body path "lastName" should be "Directly"
-    And the response body path "email" should be "newly.created.user@mail.com"
+    And the response body path "email" should be "newly.created.user.v2@mail.com"
 
   @user-create-success @cleanup_user
   Scenario: Successfully create user with valid mandatory fields
-    When a request is sent to create a user with firstName "QA", lastName "Engineer", and email "qa.valid.tester@mail.com"
+    When a request is sent to create a user with firstName "QA", lastName "Engineer", and email "qa.valid.tester.v2@mail.com"
     Then the response status code should be 200
     And the created user should have valid id
-    And the response body path "email" should be "qa.valid.tester@mail.com"
+    And the response body path "email" should be "qa.valid.tester.v2@mail.com"
 
   @user-create-duplicate-email @cleanup_user
   Scenario: Fail to create user with existing email
@@ -85,7 +85,7 @@ Feature: User API DummyAPI
 
   @user-update-single-field @cleanup_user
   Scenario: Successfully update a single field
-    Given a request is sent to create a user with firstName "Original", lastName "Name", and email "update.single.field@mail.com"
+    Given a request is sent to create a user with firstName "Original", lastName "Name", and email "update.single.field.v2@mail.com"
     And the response status code should be 200
     And the created user should have valid id
     When a request is sent to update the user with the following fields:
@@ -96,7 +96,7 @@ Feature: User API DummyAPI
 
   @user-update-multiple-fields @cleanup_user
   Scenario: Successfully update multiple fields at once
-    Given a request is sent to create a user with firstName "Multi", lastName "Field", and email "update.multi.field@mail.com"
+    Given a request is sent to create a user with firstName "Multi", lastName "Field", and email "update.multi.field.v2@mail.com"
     And the response status code should be 200
     And the created user should have valid id
     When a request is sent to update the user with the following fields:
@@ -110,7 +110,7 @@ Feature: User API DummyAPI
 
   @user-update-location @cleanup_user
   Scenario: Successfully update nested location object
-    Given a request is sent to create a user with firstName "Location", lastName "Test", and email "update.location.field@mail.com"
+    Given a request is sent to create a user with firstName "Location", lastName "Test", and email "update.location.field.v2@mail.com"
     And the response status code should be 200
     And the created user should have valid id
     When a request is sent to update the user location with street "Jl. Merdeka No. 10", city "Jakarta", state "DKI Jakarta", country "Indonesia", and timezone "+7:00"
@@ -121,13 +121,13 @@ Feature: User API DummyAPI
 
   @user-update-forbidden-email @cleanup_user
   Scenario: Attempt to update the forbidden email field is ignored
-    Given a request is sent to create a user with firstName "Locked", lastName "Email", and email "locked.email.original@mail.com"
+    Given a request is sent to create a user with firstName "Locked", lastName "Email", and email "locked.email.original.v2@mail.com"
     And the response status code should be 200
     And the created user should have valid id
     When a request is sent to update the user email to "locked.email.changed@mail.com"
     Then the response status code should be 200
     When user details are requested by that ID
-    Then the response body path "email" should be "locked.email.original@mail.com"
+    Then the response body path "email" should be "locked.email.original.v2@mail.com"
 
   @user-update-nonexistent-id
   Scenario: Fail to update user with non-existent ID
@@ -143,7 +143,7 @@ Feature: User API DummyAPI
 
   @user-update-boundary-firstname @cleanup_user
   Scenario: Update accepts firstName below documented minimum length
-    Given a request is sent to create a user with firstName "Boundary", lastName "Test", and email "update.boundary.negative@mail.com"
+    Given a request is sent to create a user with firstName "Boundary", lastName "Test", and email "update.boundary.negative.v2@mail.com"
     And the response status code should be 200
     And the created user should have valid id
     When a request is sent to update the user with the following fields:
