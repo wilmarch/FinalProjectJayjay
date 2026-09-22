@@ -1,6 +1,8 @@
 package DemoBlaze.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -55,18 +57,38 @@ public class HomePage {
             default:
                 throw new IllegalArgumentException("Kategori tidak dikenal: " + categoryName);
         }
+        List<WebElement> oldLinks = driver.findElements(productNameLinks);
+        WebElement anchor = oldLinks.isEmpty() ? null : oldLinks.get(0);
+
         wait.until(ExpectedConditions.elementToBeClickable(categoryLocator)).click();
+
+        if (anchor != null) {
+            try {
+                wait.until(ExpectedConditions.stalenessOf(anchor));
+            } catch (TimeoutException ignored) {
+            }
+        }
+
         waitForProductGridToLoad();
     }
 
     public List<String> getAllProductNames() {
         waitForProductGridToLoad();
-        List<WebElement> links = driver.findElements(productNameLinks);
-        List<String> names = new ArrayList<>();
-        for (WebElement link : links) {
-            names.add(link.getText());
+        StaleElementReferenceException lastError = null;
+        for (int attempt = 0; attempt < 3; attempt++) {
+            try {
+                List<WebElement> links = driver.findElements(productNameLinks);
+                List<String> names = new ArrayList<>();
+                for (WebElement link : links) {
+                    names.add(link.getText());
+                }
+                return names;
+            } catch (StaleElementReferenceException e) {
+                lastError = e;
+            }
         }
-        return names;
+        throw new StaleElementReferenceException(
+                "Gagal membaca daftar produk setelah beberapa percobaan (DOM terus berubah)", lastError);
     }
 
     public void clickProductByName(String productName) {
