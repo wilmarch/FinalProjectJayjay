@@ -4,14 +4,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BaseTest {
-    public static WebDriver driver;
+public class DriverFactory {
 
-    public static void getDriver() {
+    public static WebDriver createDriver() {
         ChromeOptions options = new ChromeOptions();
 
         Map<String, Object> prefs = new HashMap<>();
@@ -31,17 +29,12 @@ public class BaseTest {
             options.addArguments("--window-size=1920,1080");
         }
 
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        WebDriver driver = new ChromeDriver(options);
 
         if (!isCI) {
             driver.manage().window().maximize();
         }
-    }
 
-    public static void quitDriver() {
-        if (driver != null) {
-            driver.quit();
-        }
+        return driver;
     }
 }

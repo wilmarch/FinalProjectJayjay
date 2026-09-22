@@ -40,4 +40,3 @@ Feature: Catalog Navigation and Product Detail Page
     Given user is on the detail page for product "Nokia lumia 1520"
     When user adds the product to cart
     Then an alert should appear with message "Product added"
-    And user accepts the alert

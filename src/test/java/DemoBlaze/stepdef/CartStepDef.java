@@ -1,11 +1,7 @@
 package DemoBlaze.stepdef;
 
-import DemoBlaze.base.BaseTest;
-import DemoBlaze.pages.CartPage;
-import DemoBlaze.pages.HomePage;
-import DemoBlaze.pages.NavigationHeader;
-import DemoBlaze.pages.OrderPage;
-import DemoBlaze.pages.ProductDetailPage;
+import DemoBlaze.context.TestContext;
+import DemoBlaze.pages.*;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -17,13 +13,23 @@ import java.util.Map;
 
 public class CartStepDef {
 
-    private final HomePage homePage = new HomePage(BaseTest.driver);
-    private final ProductDetailPage detailPage = new ProductDetailPage(BaseTest.driver);
-    private final CartPage cartPage = new CartPage(BaseTest.driver);
-    private final OrderPage orderPage = new OrderPage(BaseTest.driver);
-    private final NavigationHeader navHeader = new NavigationHeader(BaseTest.driver);
+    TestContext context;
+    HomePage homePage;
+    ProductDetailPage detailPage;
+    CartPage cartPage;
+    OrderPage orderPage;
+    NavigationHeader navHeader;
 
-    private final Map<String, String> addedProductPrices = new HashMap<>();
+    Map<String, String> addedProductPrices = new HashMap<>();
+
+    public CartStepDef(TestContext context) {
+        this.context = context;
+        this.homePage = context.getHomePage();
+        this.detailPage = context.getProductDetailPage();
+        this.cartPage = context.getCartPage();
+        this.orderPage = context.getOrderPage();
+        this.navHeader = context.getNavigationHeader();
+    }
 
     @Given("user has added {string} to the cart")
     public void userHasAddedToTheCart(String productName) {
@@ -44,6 +50,7 @@ public class CartStepDef {
 
     @Then("the cart should contain {string}")
     public void theCartShouldContain(String productName) {
+        cartPage.waitForMinimumRows(1);
         List<CartPage.CartItemInfo> items = cartPage.getCartItems();
         boolean found = items.stream().anyMatch(i -> i.name.equalsIgnoreCase(productName));
         Assert.assertTrue("Produk " + productName + " tidak ditemukan di cart", found);
@@ -51,6 +58,7 @@ public class CartStepDef {
 
     @Then("the cart item list should display {string} with the matching price")
     public void theCartItemListShouldDisplayWithMatchingPrice(String productName) {
+        cartPage.waitForMinimumRows(1);
         List<CartPage.CartItemInfo> items = cartPage.getCartItems();
         CartPage.CartItemInfo item = items.stream()
                 .filter(i -> i.name.equalsIgnoreCase(productName))
@@ -67,8 +75,8 @@ public class CartStepDef {
         }
     }
 
-    @Then("the cart should list the duplicate items accordingly")
-    public void theCartShouldListTheDuplicateItemsAccordingly() {
+    @Then("the cart should display 2 rows of items")
+    public void theCartShouldDisplay2RowsOfItems() {
         cartPage.waitForMinimumRows(2);
         List<CartPage.CartItemInfo> items = cartPage.getCartItems();
         Assert.assertTrue("Harus ada minimal 2 baris item", items.size() >= 2);
@@ -76,7 +84,7 @@ public class CartStepDef {
 
     @Then("the total price should equal the sum of all individual item prices")
     public void theTotalPriceShouldEqualTheSumOfAllIndividualItemPrices() {
-        cartPage.waitForMinimumRows(2);
+        cartPage.waitForMinimumRows(1);
         List<CartPage.CartItemInfo> items = cartPage.getCartItems();
 
         int expectedTotal = 0;
@@ -99,11 +107,6 @@ public class CartStepDef {
         Assert.assertFalse("Produk masih ada di keranjang: " + productName, found);
     }
 
-    @Then("the total price should update accordingly")
-    public void theTotalPriceShouldUpdateAccordingly() {
-        Assert.assertTrue(cartPage.getTotalPrice() >= 0);
-    }
-
     @When("user deletes all items from cart")
     public void userDeletesAllItemsFromCart() {
         cartPage.deleteAllItems();
@@ -122,7 +125,7 @@ public class CartStepDef {
 
     @When("user refreshes the browser page")
     public void userRefreshesTheBrowserPage() {
-        BaseTest.driver.navigate().refresh();
+        context.getDriver().navigate().refresh();
         cartPage.waitForCartToLoad();
     }
 
@@ -134,11 +137,6 @@ public class CartStepDef {
     @When("user proceeds to place order")
     public void userProceedsToPlaceOrder() {
         cartPage.clickPlaceOrder();
-    }
-
-    @Then("the order modal should be displayed")
-    public void theOrderModalShouldBeDisplayed() {
-        orderPage.waitForOrderModal();
     }
 
     @Then("document if checkout modal is allowed to open without items")

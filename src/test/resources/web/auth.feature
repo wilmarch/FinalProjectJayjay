@@ -9,21 +9,18 @@ Feature: Authentication and User Management
     When user opens the sign up modal
     And user registers with a dynamically generated username and password "Secret123!"
     Then an alert should appear with message "Sign up successful."
-    And user accepts the alert
 
   @signup-existing-user @negative
   Scenario: Sign up with an existing username
     When user opens the sign up modal
     And user registers with username "test" and password "test"
     Then an alert should appear with message "This user already exist."
-    And user accepts the alert
 
   @signup-blank-credentials @negative
   Scenario Outline: Sign up with blank credentials
     When user opens the sign up modal
     And user registers with username "<username>" and password "<password>"
     Then an alert should appear with message "Please fill out Username and Password."
-    And user accepts the alert
 
     Examples:
       | username    | password   |
@@ -36,7 +33,6 @@ Feature: Authentication and User Management
     When user opens the sign up modal
     And user registers with a dynamically generated username and password "1"
     Then an alert should appear with message "Sign up successful."
-    And user accepts the alert
 
   @signup-close-modal @positive
   Scenario: Close sign up modal without changes
@@ -54,23 +50,20 @@ Feature: Authentication and User Management
   @login-wrong-password @negative
   Scenario: Login with incorrect password
     When user opens the login modal
-    And user logs in with username "valid_registered_user" and password "WrongPassword!"
-    Then an alert should appear with message "User does not exist."
-    And user accepts the alert
+    And user logs in with username "test" and password "WrongPassword123!"
+    Then an alert should appear with message "Wrong password."
 
   @login-non-existent @negative
   Scenario: Login with non-existent username
     When user opens the login modal
     And user logs in with non-existent random username and password "RandomPass123!"
     Then an alert should appear with message "User does not exist."
-    And user accepts the alert
 
   @login-blank-credentials @negative
   Scenario Outline: Login with blank credentials
     When user opens the login modal
     And user logs in with username "<username>" and password "<password>"
     Then an alert should appear with message "Please fill out Username and Password."
-    And user accepts the alert
 
     Examples:
       | username        | password       |

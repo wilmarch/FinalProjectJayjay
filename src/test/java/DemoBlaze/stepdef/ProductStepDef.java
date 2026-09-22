@@ -1,6 +1,6 @@
 package DemoBlaze.stepdef;
 
-import DemoBlaze.base.BaseTest;
+import DemoBlaze.context.TestContext;
 import DemoBlaze.pages.HomePage;
 import DemoBlaze.pages.ProductDetailPage;
 import io.cucumber.java.en.Given;
@@ -17,9 +17,17 @@ import java.util.List;
 
 public class ProductStepDef {
 
-    private final HomePage homePage = new HomePage(BaseTest.driver);
-    private final ProductDetailPage detailPage = new ProductDetailPage(BaseTest.driver);
-    private final WebDriverWait wait = new WebDriverWait(BaseTest.driver, Duration.ofSeconds(10));
+    TestContext context;
+    HomePage homePage;
+    ProductDetailPage detailPage;
+    WebDriverWait wait;
+
+    public ProductStepDef(TestContext context) {
+        this.context = context;
+        this.homePage = context.getHomePage();
+        this.detailPage = context.getProductDetailPage();
+        this.wait = new WebDriverWait(context.getDriver(), Duration.ofSeconds(10));
+    }
 
     @When("user selects category {string}")
     public void userSelectsCategory(String category) {
@@ -61,7 +69,7 @@ public class ProductStepDef {
 
     @Then("the page should redirect to product detail page or document failure if unlinked")
     public void verifyThumbnailRedirection() {
-        String currentUrl = BaseTest.driver.getCurrentUrl();
+        String currentUrl = context.getDriver().getCurrentUrl();
         boolean isDetailPage = currentUrl.contains("prod.html");
         if (!isDetailPage) {
             System.out.println("[KNOWN BUG DETECTED] Mengklik thumbnail gambar tidak melakukan navigasi ke detail page.");

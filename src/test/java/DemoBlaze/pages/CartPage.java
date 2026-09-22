@@ -74,6 +74,13 @@ public class CartPage {
 
     public void deleteAllItems() {
         waitForCartToLoad();
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(2))
+                    .until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#tbodyid tr")));
+        } catch (Exception e) {
+            return;
+        }
+
         while (true) {
             List<WebElement> deleteLinks = driver.findElements(By.xpath("//tr//a[normalize-space()='Delete']"));
             if (deleteLinks.isEmpty()) {

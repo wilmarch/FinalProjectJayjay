@@ -66,7 +66,6 @@ public class OrderPage {
     }
 
     public String getConfirmationText() {
-        // Tunggu modal sukses SweetAlert tampil
         wait.until(ExpectedConditions.visibilityOfElementLocated(sweetAlertBox));
         String title = driver.findElement(sweetAlertTitle).getText();
         String details = driver.findElement(sweetAlertText).getText();

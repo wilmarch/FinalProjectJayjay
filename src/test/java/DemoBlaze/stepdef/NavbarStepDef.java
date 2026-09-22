@@ -1,6 +1,6 @@
 package DemoBlaze.stepdef;
 
-import DemoBlaze.base.BaseTest;
+import DemoBlaze.context.TestContext;
 import DemoBlaze.pages.HomePage;
 import DemoBlaze.pages.NavigationHeader;
 import io.cucumber.datatable.DataTable;
@@ -17,9 +17,17 @@ import java.util.Map;
 
 public class NavbarStepDef {
 
-    private final HomePage homePage = new HomePage(BaseTest.driver);
-    private final NavigationHeader navHeader = new NavigationHeader(BaseTest.driver);
-    private final WebDriverWait wait = new WebDriverWait(BaseTest.driver, Duration.ofSeconds(10));
+    TestContext context;
+    HomePage homePage;
+    NavigationHeader navHeader;
+    WebDriverWait wait;
+
+    public NavbarStepDef(TestContext context) {
+        this.context = context;
+        this.homePage = context.getHomePage();
+        this.navHeader = context.getNavigationHeader();
+        this.wait = new WebDriverWait(context.getDriver(), Duration.ofSeconds(10));
+    }
 
     @When("user clicks {string} navbar link")
     public void userClicksNavbarLink(String linkText) {
@@ -28,7 +36,7 @@ public class NavbarStepDef {
 
     @When("user submits contact message with all blank fields")
     public void userSubmitsContactMessageWithAllBlankFields() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[normalize-space()='Send message']"))).click();
+        navHeader.clickSendMessage();
     }
 
     @Then("document if system alerts {string} despite empty inputs")
@@ -42,18 +50,18 @@ public class NavbarStepDef {
 
     @Then("the About Us modal should appear")
     public void theAboutUsModalShouldAppear() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("videoModal")));
+        navHeader.waitForAboutUsModal();
     }
 
     @Then("the video player should be present inside the modal")
     public void theVideoPlayerShouldBePresentInsideTheModal() {
-        Assert.assertTrue(BaseTest.driver.findElement(By.id("example-video")).isDisplayed());
-        BaseTest.driver.findElement(By.xpath("//div[@id='videoModal']//button[normalize-space()='Close']")).click();
+        Assert.assertTrue("Video player tidak ditemukan di modal", navHeader.isVideoPlayerPresent());
+        navHeader.closeAboutUsModal();
     }
 
     @When("user clicks the site brand logo")
     public void userClicksTheSiteBrandLogo() {
-        BaseTest.driver.findElement(By.id("nava")).click();
+        navHeader.clickBrandLogo();
     }
 
     @When("user fills contact form with valid details:")
@@ -79,6 +87,12 @@ public class NavbarStepDef {
     @Then("user should be redirected to the homepage product grid")
     public void userShouldBeRedirectedToTheHomepageProductGrid() {
         homePage.waitForProductGridToLoad();
-        Assert.assertTrue(BaseTest.driver.getCurrentUrl().contains("index.html"));
+        Assert.assertTrue(context.getDriver().getCurrentUrl().contains("index.html"));
+    }
+
+    @Then("an alert should appear with message {string}")
+    public void anAlertShouldAppearWithMessage(String expectedMsg) {
+        String alertText = navHeader.getAlertTextAndAccept();
+        Assert.assertEquals("Pesan alert tidak cocok", expectedMsg, alertText);
     }
 }

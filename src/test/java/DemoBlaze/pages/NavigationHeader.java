@@ -3,44 +3,65 @@ package DemoBlaze.pages;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.JavascriptExecutor;
 
 import java.time.Duration;
 
 public class NavigationHeader {
 
-    WebDriver driver;
-    WebDriverWait wait;
+    private final WebDriver driver;
+    private final WebDriverWait wait;
 
     // Navbar links
-    By homeLink = By.xpath("//*[@id='navbarExample']/ul/li[1]/a");
-    By loginNavLink = By.id("login2");
-    By signupNavLink = By.id("signin2");
-    By logoutNavLink = By.id("logout2");
-    By welcomeUserText = By.id("nameofuser");
+    private final By homeLink = By.xpath("//*[@id='navbarExample']/ul/li[1]/a");
+    private final By brandLogo = By.id("nava");
+    private final By loginNavLink = By.id("login2");
+    private final By signupNavLink = By.id("signin2");
+    private final By logoutNavLink = By.id("logout2");
+    private final By welcomeUserText = By.id("nameofuser");
 
     // Login modal
-    By loginUsernameInput = By.id("loginusername");
-    By loginPasswordInput = By.id("loginpassword");
-    By loginSubmitButton = By.xpath("//button[normalize-space()='Log in']");
+    private final By loginUsernameInput = By.id("loginusername");
+    private final By loginPasswordInput = By.id("loginpassword");
+    private final By loginSubmitButton = By.xpath("//div[@id='logInModal']//button[normalize-space()='Log in']");
 
     // Sign Up modal
-    By signupUsernameInput = By.id("sign-username");
-    By signupPasswordInput = By.id("sign-password");
-    By signupSubmitButton = By.xpath("//button[normalize-space()='Sign up']");
+    private final By signUpModal = By.id("signInModal");
+    private final By signupUsernameInput = By.id("sign-username");
+    private final By signupPasswordInput = By.id("sign-password");
+    private final By signupSubmitButton = By.xpath("//div[@id='signInModal']//button[normalize-space()='Sign up']");
+    private final By signupCloseButton = By.xpath("//div[@id='signInModal']//button[normalize-space()='Close']");
 
-    By contactEmailInput = By.id("recipient-email");
-    By contactNameInput = By.id("recipient-name");
-    By contactMessageInput = By.id("message-text");
-    By sendMessageButton = By.xpath("//button[normalize-space()='Send message']");
+    // Contact modal
+    private final By contactEmailInput = By.id("recipient-email");
+    private final By contactNameInput = By.id("recipient-name");
+    private final By contactMessageInput = By.id("message-text");
+    private final By sendMessageButton = By.xpath("//button[normalize-space()='Send message']");
+
+    // About Us modal
+    private final By videoModal = By.id("videoModal");
+    private final By videoPlayer = By.id("example-video");
+    private final By videoModalCloseButton = By.xpath("//div[@id='videoModal']//button[normalize-space()='Close']");
 
     public NavigationHeader(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
+    private void safeClick(By locator) {
+        WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(element)).click();
+        } catch (ElementClickInterceptedException e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+        }
+    }
+
     public void goToHome() {
-        wait.until(ExpectedConditions.elementToBeClickable(homeLink)).click();
+        safeClick(homeLink);
+    }
+
+    public void clickBrandLogo() {
+        safeClick(brandLogo);
     }
 
     public void goToCart() {
@@ -50,27 +71,31 @@ public class NavigationHeader {
         By cartLocator = By.xpath("//a[@id='cartur' or contains(@href, 'cart.html')]");
         try {
             WebElement cartElement = wait.until(ExpectedConditions.presenceOfElementLocated(cartLocator));
-            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", cartElement);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", cartElement);
         } catch (Exception e) {
             driver.get("https://www.demoblaze.com/cart.html");
         }
     }
 
     public void openLoginModal() {
-        wait.until(ExpectedConditions.elementToBeClickable(loginNavLink)).click();
+        safeClick(loginNavLink);
         wait.until(ExpectedConditions.visibilityOfElementLocated(loginUsernameInput));
     }
 
     public void enterLoginUsername(String username) {
-        driver.findElement(loginUsernameInput).sendKeys(username);
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(loginUsernameInput));
+        input.clear();
+        input.sendKeys(username);
     }
 
     public void enterLoginPassword(String password) {
-        driver.findElement(loginPasswordInput).sendKeys(password);
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(loginPasswordInput));
+        input.clear();
+        input.sendKeys(password);
     }
 
     public void clickLoginSubmit() {
-        driver.findElement(loginSubmitButton).click();
+        safeClick(loginSubmitButton);
     }
 
     public void loginWithValidCredentials(String username, String password) {
@@ -93,26 +118,54 @@ public class NavigationHeader {
         }
     }
 
+    public boolean isLoginLinkVisible() {
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(loginNavLink)).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean isSignupLinkVisible() {
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(signupNavLink)).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void logout() {
-        wait.until(ExpectedConditions.elementToBeClickable(logoutNavLink)).click();
+        safeClick(logoutNavLink);
         wait.until(ExpectedConditions.visibilityOfElementLocated(loginNavLink));
     }
 
     public void openSignupModal() {
-        wait.until(ExpectedConditions.elementToBeClickable(signupNavLink)).click();
+        safeClick(signupNavLink);
         wait.until(ExpectedConditions.visibilityOfElementLocated(signupUsernameInput));
     }
 
     public void enterSignupUsername(String username) {
-        driver.findElement(signupUsernameInput).sendKeys(username);
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(signupUsernameInput));
+        input.clear();
+        input.sendKeys(username);
     }
 
     public void enterSignupPassword(String password) {
-        driver.findElement(signupPasswordInput).sendKeys(password);
+        WebElement input = wait.until(ExpectedConditions.visibilityOfElementLocated(signupPasswordInput));
+        input.clear();
+        input.sendKeys(password);
     }
 
     public void clickSignupSubmit() {
-        driver.findElement(signupSubmitButton).click();
+        safeClick(signupSubmitButton);
+    }
+
+    public void closeSignupModal() {
+        safeClick(signupCloseButton);
+    }
+
+    public boolean isSignupModalClosed() {
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(signUpModal));
     }
 
     public String getAlertTextAndAccept() {
@@ -129,6 +182,19 @@ public class NavigationHeader {
     }
 
     public void clickSendMessage() {
-        wait.until(ExpectedConditions.elementToBeClickable(sendMessageButton)).click();
+        safeClick(sendMessageButton);
+    }
+
+    public void waitForAboutUsModal() {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(videoModal));
+    }
+
+    public boolean isVideoPlayerPresent() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(videoPlayer)).isDisplayed();
+    }
+
+    public void closeAboutUsModal() {
+        safeClick(videoModalCloseButton);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(videoModal));
     }
 }

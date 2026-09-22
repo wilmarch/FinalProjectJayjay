@@ -37,4 +37,3 @@ Feature: Navbar Links and Miscellaneous Modals
       | Message | Hello, this is a test message. |
     And user submits the contact message
     Then an alert should appear with message "Thanks for the message!!"
-    And user accepts the alert

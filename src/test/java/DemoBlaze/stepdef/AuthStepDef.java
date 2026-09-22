@@ -1,27 +1,29 @@
 package DemoBlaze.stepdef;
 
-import DemoBlaze.base.BaseTest;
+import DemoBlaze.context.TestContext;
+import DemoBlaze.pages.HomePage;
 import DemoBlaze.pages.NavigationHeader;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
 import java.util.UUID;
 
 public class AuthStepDef {
 
-    private final NavigationHeader navHeader = new NavigationHeader(BaseTest.driver);
-    private final WebDriverWait wait = new WebDriverWait(BaseTest.driver, Duration.ofSeconds(10));
+     NavigationHeader navHeader;
+    HomePage homePage;
     private String lastGeneratedUsername;
+
+    public AuthStepDef(TestContext context) {
+        this.navHeader = context.getNavigationHeader();
+        this.homePage = context.getHomePage();
+    }
 
     @Given("user is on the DemoBlaze homepage")
     public void userIsOnTheDemoBlazeHomepage() {
-        BaseTest.driver.get("https://www.demoblaze.com/index.html");
+        homePage.openHomePage();
     }
 
     @When("user opens the sign up modal")
@@ -46,13 +48,12 @@ public class AuthStepDef {
 
     @When("user closes the sign up modal")
     public void userClosesTheSignUpModal() {
-        BaseTest.driver.findElement(By.xpath("//div[@id='signInModal']//button[normalize-space()='Close']")).click();
+        navHeader.closeSignupModal();
     }
 
     @Then("the sign up modal should no longer be visible")
     public void theSignUpModalShouldNoLongerBeVisible() {
-        boolean isClosed = wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id("signInModal")));
-        Assert.assertTrue("Modal Sign Up masih terlihat", isClosed);
+        Assert.assertTrue("Modal Sign Up masih terlihat", navHeader.isSignupModalClosed());
     }
 
     @When("user opens the login modal")
@@ -100,9 +101,9 @@ public class AuthStepDef {
     @Then("the navbar should display the {string} link")
     public void theNavbarShouldDisplayTheLink(String linkName) {
         if ("Log in".equalsIgnoreCase(linkName)) {
-            Assert.assertTrue(BaseTest.driver.findElement(By.id("login2")).isDisplayed());
+            Assert.assertTrue("Link Log in tidak tampil", navHeader.isLoginLinkVisible());
         } else if ("Sign up".equalsIgnoreCase(linkName)) {
-            Assert.assertTrue(BaseTest.driver.findElement(By.id("signin2")).isDisplayed());
+            Assert.assertTrue("Link Sign up tidak tampil", navHeader.isSignupLinkVisible());
         }
     }
 }

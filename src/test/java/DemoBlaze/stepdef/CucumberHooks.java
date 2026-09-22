@@ -1,18 +1,24 @@
 package DemoBlaze.stepdef;
 
-import DemoBlaze.base.BaseTest;
+import DemoBlaze.context.TestContext;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 
-public class CucumberHooks extends BaseTest {
+public class CucumberHooks {
 
-    @Before
-    public void setUp() {
-        getDriver();
+    private final TestContext context;
+
+    public CucumberHooks(TestContext context) {
+        this.context = context;
     }
 
-    @After
+    @Before("@web")
+    public void setUp() {
+        context.getDriver();
+    }
+
+    @After("@web")
     public void tearDown() {
-        quitDriver();
+        context.quitDriver();
     }
 }
