@@ -1,0 +1,83 @@
+name: Automation Test Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  api-tests:
+    name: Run API Tests (@api)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant Execute Permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Execute API Tests (@api)
+        run: ./gradlew apiTest
+
+      - name: Upload Cucumber API Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-api-reports
+          path: |
+            build/reports/cucumber-api.html
+            build/reports/cucumber-api.json
+            build/reports/tests/apiTest/
+          if-no-files-found: warn
+          retention-days: 14
+
+  web-tests:
+    name: Run Web UI Tests (@web)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Grant Execute Permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Execute Web Tests with Virtual Display (@web)
+        run: xvfb-run ./gradlew webTest
+
+      - name: Upload Cucumber Web Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-web-reports
+          path: |
+            build/reports/cucumber-web.html
+            build/reports/cucumber-web.json
+            build/reports/tests/webTest/
+          if-no-files-found: warn
+          retention-days: 14
