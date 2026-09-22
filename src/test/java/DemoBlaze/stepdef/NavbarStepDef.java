@@ -15,7 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.Map;
 
-public class NavbarMiscStepDef {
+public class NavbarStepDef {
 
     private final HomePage homePage = new HomePage(BaseTest.driver);
     private final NavigationHeader navHeader = new NavigationHeader(BaseTest.driver);
