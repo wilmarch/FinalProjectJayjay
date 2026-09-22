@@ -1,6 +1,7 @@
 package DemoBlaze.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -61,7 +62,13 @@ public class CartPage {
     }
 
     public void clickPlaceOrder() {
-        wait.until(ExpectedConditions.elementToBeClickable(placeOrderBtn)).click();
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(placeOrderBtn));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", button);
+        try {
+            button.click();
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", button);
+        }
     }
 
     public void deleteItemByName(String productName) {
