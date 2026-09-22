@@ -47,9 +47,6 @@ public class ProductStepDef {
         Assert.assertFalse(products.isEmpty());
     }
 
-    // Disatuin dari 2 Gherkin phrase sebelumnya ("user clicks on product
-    // title" & "user clicks on a product") jadi satu, karena behavior-nya
-    // sama persis - dua kalimat beda buat satu aksi cuma bikin bingung.
     @When("user clicks on a product {string}")
     public void userClicksOnProductTitle(String productName) {
         homePage.clickProductByName(productName);

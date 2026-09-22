@@ -77,10 +77,6 @@ public class CheckoutStepDef {
         Assert.assertTrue(conf.contains("Name:"));
     }
 
-    // REFACTOR dari versi gabungan: sebelumnya manggil method2 punya CartStepDef
-    // langsung (userHasAddedToTheCart, dst) - ga bisa lagi setelah dipisah class
-    // (beda instance). Sekarang manggil Page Object langsung, self-contained,
-    // ga bergantung ke class step def lain sama sekali.
     @Given("user has completed a purchase for {string}")
     public void userHasCompletedAPurchaseFor(String product) {
         homePage.openHomePage();

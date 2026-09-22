@@ -71,15 +71,11 @@ public class NavbarMiscStepDef {
         navHeader.clickSendMessage();
     }
 
-    // Dipindah dari ProductStepDef - ini step navbar (Home link), bukan
-    // step katalog produk, jadi domainnya lebih pas di sini.
     @When("user clicks the Home link in navbar")
     public void userClicksTheHomeLinkInNavbar() {
         navHeader.goToHome();
     }
 
-    // Dipakai oleh 2 skenario di file ini: back-to-home dan
-    // brand-logo-navigation - reusable lintas skenario navigasi ke home.
     @Then("user should be redirected to the homepage product grid")
     public void userShouldBeRedirectedToTheHomepageProductGrid() {
         homePage.waitForProductGridToLoad();

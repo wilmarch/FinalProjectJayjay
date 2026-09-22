@@ -23,13 +23,8 @@ public class CartStepDef {
     private final OrderPage orderPage = new OrderPage(BaseTest.driver);
     private final NavigationHeader navHeader = new NavigationHeader(BaseTest.driver);
 
-    // Nyimpen harga produk dari detail page pas ditambahin ke cart, biar
-    // step "with the matching price" bisa beneran verifikasi harga di cart
-    // sama dengan harga yang ditampilkan di detail page - bukan cuma cek
-    // harga di cart gak kosong.
     private final Map<String, String> addedProductPrices = new HashMap<>();
 
-    // Dipakai juga oleh checkout.feature (Background) - reusable lintas feature
     @Given("user has added {string} to the cart")
     public void userHasAddedToTheCart(String productName) {
         homePage.openHomePage();
@@ -41,7 +36,6 @@ public class CartStepDef {
         navHeader.goToHome();
     }
 
-    // Dipakai juga oleh checkout.feature (Background)
     @When("user navigates to the cart page")
     public void userNavigatesToTheCartPage() {
         navHeader.goToCart();
@@ -69,9 +63,6 @@ public class CartStepDef {
             Assert.assertEquals("Harga " + productName + " di cart tidak sesuai dengan detail page",
                     expectedPrice, item.price);
         } else {
-            // Fallback kalau produk ditambahin lewat jalur lain (bukan lewat
-            // "user has added ... to the cart") sehingga harga aslinya
-            // gak sempat tercatat di sini.
             Assert.assertFalse("Harga produk " + productName + " kosong", item.price.isEmpty());
         }
     }
@@ -124,7 +115,6 @@ public class CartStepDef {
         cartPage.deleteAllItems();
     }
 
-    // Dipakai juga oleh checkout.feature (scenario checkout-complete-flow)
     @Then("the cart should be completely empty")
     public void theCartShouldBeCompletelyEmpty() {
         Assert.assertTrue("Cart seharusnya kosong", cartPage.isCartEmpty());
@@ -141,7 +131,6 @@ public class CartStepDef {
         theCartShouldContain(productName);
     }
 
-    // Dipakai juga oleh checkout.feature (semua scenario)
     @When("user proceeds to place order")
     public void userProceedsToPlaceOrder() {
         cartPage.clickPlaceOrder();
