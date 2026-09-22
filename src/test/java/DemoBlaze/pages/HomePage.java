@@ -10,10 +10,6 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Page Object untuk homepage demoblaze (index.html) - kategori, grid produk,
- * navigasi ke detail produk, dan pagination.
- */
 public class HomePage {
 
     WebDriver driver;
@@ -71,13 +67,6 @@ public class HomePage {
             names.add(link.getText());
         }
         return names;
-    }
-
-    public String getPriceByProductName(String productName) {
-        String xpath = String.format(
-                "//a[text()='%s']/ancestor::div[contains(@class,'card-block')]//h5[@class='card-title']",
-                productName);
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath))).getText();
     }
 
     public void clickProductByName(String productName) {

@@ -14,7 +14,7 @@ Feature: Authentication and User Management
   @signup-existing-user @negative
   Scenario: Sign up with an existing username
     When user opens the sign up modal
-    And user registers with username "existing_user_test" and password "Secret123!"
+    And user registers with username "test" and password "test"
     Then an alert should appear with message "This user already exist."
     And user accepts the alert
 

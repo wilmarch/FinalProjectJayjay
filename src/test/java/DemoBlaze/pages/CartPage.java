@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartPage {
-     WebDriver driver;
-     WebDriverWait wait;
+    WebDriver driver;
+    WebDriverWait wait;
 
-     By cartTableRows = By.cssSelector("#tbodyid tr.success");
-     By totalPrice = By.id("totalp");
-     By placeOrderBtn = By.xpath("//button[normalize-space()='Place Order']");
+    By totalPrice = By.id("totalp");
+    By placeOrderBtn = By.xpath("//button[normalize-space()='Place Order']");
 
     public CartPage(WebDriver driver) {
         this.driver = driver;

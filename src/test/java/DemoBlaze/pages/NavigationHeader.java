@@ -9,31 +9,30 @@ import java.time.Duration;
 
 public class NavigationHeader {
 
-     WebDriver driver;
-     WebDriverWait wait;
+    WebDriver driver;
+    WebDriverWait wait;
 
     // Navbar links
-     By homeLink = By.xpath("//*[@id='navbarExample']/ul/li[1]/a");
-     By cartLink = By.id("cartur");
-     By loginNavLink = By.id("login2");
-     By signupNavLink = By.id("signin2");
-     By logoutNavLink = By.id("logout2");
-     By welcomeUserText = By.id("nameofuser");
+    By homeLink = By.xpath("//*[@id='navbarExample']/ul/li[1]/a");
+    By loginNavLink = By.id("login2");
+    By signupNavLink = By.id("signin2");
+    By logoutNavLink = By.id("logout2");
+    By welcomeUserText = By.id("nameofuser");
 
     // Login modal
-     By loginUsernameInput = By.id("loginusername");
-     By loginPasswordInput = By.id("loginpassword");
-     By loginSubmitButton = By.xpath("//button[normalize-space()='Log in']");
+    By loginUsernameInput = By.id("loginusername");
+    By loginPasswordInput = By.id("loginpassword");
+    By loginSubmitButton = By.xpath("//button[normalize-space()='Log in']");
 
     // Sign Up modal
-     By signupUsernameInput = By.id("sign-username");
-     By signupPasswordInput = By.id("sign-password");
-     By signupSubmitButton = By.xpath("//button[normalize-space()='Sign up']");
+    By signupUsernameInput = By.id("sign-username");
+    By signupPasswordInput = By.id("sign-password");
+    By signupSubmitButton = By.xpath("//button[normalize-space()='Sign up']");
 
-     By contactEmailInput = By.id("recipient-email");
-     By contactNameInput = By.id("recipient-name");
-     By contactMessageInput = By.id("message-text");
-     By sendMessageButton = By.xpath("//button[normalize-space()='Send message']");
+    By contactEmailInput = By.id("recipient-email");
+    By contactNameInput = By.id("recipient-name");
+    By contactMessageInput = By.id("message-text");
+    By sendMessageButton = By.xpath("//button[normalize-space()='Send message']");
 
     public NavigationHeader(WebDriver driver) {
         this.driver = driver;
@@ -114,13 +113,6 @@ public class NavigationHeader {
 
     public void clickSignupSubmit() {
         driver.findElement(signupSubmitButton).click();
-    }
-
-    public void signUp(String username, String password) {
-        openSignupModal();
-        enterSignupUsername(username);
-        enterSignupPassword(password);
-        clickSignupSubmit();
     }
 
     public String getAlertTextAndAccept() {
