@@ -136,6 +136,12 @@ public class CartStepDef {
 
     @When("user proceeds to place order")
     public void userProceedsToPlaceOrder() {
+        try {
+            if (!cartPage.isCartEmpty()) {
+                context.setExpectedTotalAmount(cartPage.getTotalPrice());
+            }
+        } catch (Exception ignored) {
+        }
         cartPage.clickPlaceOrder();
     }
 

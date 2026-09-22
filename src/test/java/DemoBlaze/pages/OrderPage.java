@@ -7,6 +7,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import java.time.Duration;
 
 public class OrderPage {
@@ -80,5 +83,14 @@ public class OrderPage {
             ((JavascriptExecutor) driver).executeScript("arguments[0].click();", okButton);
         }
         wait.until(ExpectedConditions.invisibilityOfElementLocated(sweetAlertBox));
+    }
+
+    public int getConfirmedAmount() {
+        String text = getConfirmationText();
+        Matcher matcher = Pattern.compile("Amount:\\s*(\\d+)").matcher(text);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        throw new IllegalStateException("Label 'Amount: <angka>' tidak ditemukan di dalam struk konfirmasi:\n" + text);
     }
 }

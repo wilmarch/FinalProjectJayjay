@@ -13,6 +13,16 @@ public class TestContext {
     private OrderPage orderPage;
     private NavigationHeader navigationHeader;
 
+    private int expectedTotalAmount;
+
+    public int getExpectedTotalAmount() {
+        return expectedTotalAmount;
+    }
+
+    public void setExpectedTotalAmount(int expectedTotalAmount) {
+        this.expectedTotalAmount = expectedTotalAmount;
+    }
+
     public WebDriver getDriver() {
         if (driver == null) {
             driver = DriverFactory.createDriver();

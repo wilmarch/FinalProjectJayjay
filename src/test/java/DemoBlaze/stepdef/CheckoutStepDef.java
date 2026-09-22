@@ -11,11 +11,13 @@ import java.util.Map;
 
 public class CheckoutStepDef {
 
-    OrderPage orderPage;
+    private final TestContext context;
+    private final OrderPage orderPage;
     private String lastSubmittedName;
     private String lastSubmittedCard;
 
     public CheckoutStepDef(TestContext context) {
+        this.context = context;
         this.orderPage = context.getOrderPage();
     }
 
@@ -73,8 +75,6 @@ public class CheckoutStepDef {
     public void theConfirmationShouldDisplayMatchingNameCardAndTotalAmount() {
         String conf = orderPage.getConfirmationText();
 
-        Assert.assertTrue("Label Amount tidak ditemukan di struk konfirmasi", conf.contains("Amount:"));
-
         if (lastSubmittedName != null) {
             Assert.assertTrue("Nama pada struk tidak sesuai dengan yang diinput: " + lastSubmittedName,
                     conf.contains(lastSubmittedName));
@@ -82,6 +82,18 @@ public class CheckoutStepDef {
         if (lastSubmittedCard != null) {
             Assert.assertTrue("Nomor kartu pada struk tidak sesuai dengan yang diinput: " + lastSubmittedCard,
                     conf.contains(lastSubmittedCard));
+        }
+
+        int expectedTotal = context.getExpectedTotalAmount();
+        if (expectedTotal > 0) {
+            int actualConfirmedAmount = orderPage.getConfirmedAmount();
+            Assert.assertEquals(
+                    "Nominal pada struk konfirmasi tidak cocok dengan total harga keranjang belanja",
+                    expectedTotal,
+                    actualConfirmedAmount
+            );
+        } else {
+            Assert.assertTrue("Label Amount tidak ditemukan di struk konfirmasi", conf.contains("Amount:"));
         }
     }
 
